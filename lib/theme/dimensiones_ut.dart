@@ -5,7 +5,9 @@ abstract final class DimensionesUT {
   static const double espacio2 = 2;
   static const double espacio4 = 4;
   static const double espacio8 = 8;
+  static const double espacio10 = 10;
   static const double espacio12 = 12;
+  static const double espacio14 = 14;
   static const double espacio16 = 16;
   static const double espacio20 = 20;
   static const double espacio24 = 24;
