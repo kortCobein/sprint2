@@ -1,13 +1,14 @@
 import 'package:flutter/widgets.dart';
 
-import 'modulo_historia.dart';
+import '../integracion/contenedor_dependencias.dart';
 
-/// Separa la composición funcional del aspecto visual.
+/// Contrato de frontera entre core y la capa visual.
 ///
-/// La implementación concreta puede vivir en lib/theme/ y recibir los módulos
-/// activos ya validados por core.
+/// La implementación concreta vive en lib/theme/ y decide navegación,
+/// pantallas y apariencia usando únicamente contratos registrados en core.
 abstract interface class ConstructorAplicacion {
   Widget construir({
-    required List<ModuloHistoria> modulos,
+    required Set<String> historiasActivas,
+    required ContenedorDependencias contenedor,
   });
 }
