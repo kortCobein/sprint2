@@ -559,42 +559,46 @@ class _FormularioProductoUTState extends State<_FormularioProductoUT> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.titulo)),
       body: ContenedorResponsiveUT(
-        child: ListView(
+        child: Padding(
           padding: const EdgeInsets.symmetric(
             vertical: DimensionesUT.espacio20,
           ),
-          children: [
-            CampoUT(etiqueta: 'Título', controlador: _titulo),
-            const SizedBox(height: DimensionesUT.espacio12),
-            CampoUT(
-              etiqueta: 'Precio',
-              controlador: _precio,
-              tipoTeclado: const TextInputType.numberWithOptions(decimal: true),
-            ),
-            const SizedBox(height: DimensionesUT.espacio12),
-            CampoUT(etiqueta: 'Categoría', controlador: _categoria),
-            const SizedBox(height: DimensionesUT.espacio12),
-            CampoUT(etiqueta: 'URL de imagen', controlador: _imagen),
-            const SizedBox(height: DimensionesUT.espacio12),
-            CampoUT(
-              etiqueta: 'Descripción',
-              controlador: _descripcion,
-              maxLineas: 5,
-              minLineas: 3,
-            ),
-            if (_error != null) ...[
-              const SizedBox(height: DimensionesUT.espacio16),
-              EstadoErrorUT(mensaje: _error!),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              CampoUT(etiqueta: 'Título', controlador: _titulo),
+              const SizedBox(height: DimensionesUT.espacio12),
+              CampoUT(
+                etiqueta: 'Precio',
+                controlador: _precio,
+                tipoTeclado:
+                    const TextInputType.numberWithOptions(decimal: true),
+              ),
+              const SizedBox(height: DimensionesUT.espacio12),
+              CampoUT(etiqueta: 'Categoría', controlador: _categoria),
+              const SizedBox(height: DimensionesUT.espacio12),
+              CampoUT(etiqueta: 'URL de imagen', controlador: _imagen),
+              const SizedBox(height: DimensionesUT.espacio12),
+              CampoUT(
+                etiqueta: 'Descripción',
+                controlador: _descripcion,
+                maxLineas: 5,
+                minLineas: 3,
+              ),
+              if (_error != null) ...[
+                const SizedBox(height: DimensionesUT.espacio16),
+                EstadoErrorUT(mensaje: _error!),
+              ],
+              const SizedBox(height: DimensionesUT.espacio20),
+              BotonUT(
+                etiqueta: 'Guardar',
+                icono: Icons.save_outlined,
+                cargando: _guardando,
+                expandido: true,
+                alPresionar: _guardar,
+              ),
             ],
-            const SizedBox(height: DimensionesUT.espacio20),
-            BotonUT(
-              etiqueta: 'Guardar',
-              icono: Icons.save_outlined,
-              cargando: _guardando,
-              expandido: true,
-              alPresionar: _guardar,
-            ),
-          ],
+          ),
         ),
       ),
     );
