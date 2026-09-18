@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../core/contratos/carrito.dart';
 import '../../core/contratos/sesion.dart';
 import '../../core/integracion/contenedor_dependencias.dart';
-import '../componentes/boton_ut.dart';
 import '../componentes/estado_error_ut.dart';
 import '../componentes/estado_vacio_ut.dart';
 import '../dimensiones_ut.dart';
@@ -114,11 +113,13 @@ class _PantallaCarritoContratoUTState
     }
 
     return ContenedorResponsiveUT(
-      child: ListView(
+      child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: DimensionesUT.espacio20,
         ),
-        children: [
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
           if (_error != null) ...[
             EstadoErrorUT(mensaje: _error!),
             const SizedBox(height: DimensionesUT.espacio16),
@@ -214,14 +215,8 @@ class _PantallaCarritoContratoUTState
             const LinearProgressIndicator(),
           ],
           const SizedBox(height: DimensionesUT.espacio20),
-          BotonUT(
-            etiqueta: 'Seguir comprando',
-            icono: Icons.storefront_outlined,
-            variante: VarianteBotonUT.secundario,
-            expandido: true,
-            alPresionar: () {},
-          ),
         ],
+        ),
       ),
     );
   }
