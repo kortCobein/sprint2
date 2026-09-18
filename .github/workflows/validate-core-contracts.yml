@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - feature/core-contracts
+  pull_request:
+    branches:
+      - main
 
 jobs:
   validate:
