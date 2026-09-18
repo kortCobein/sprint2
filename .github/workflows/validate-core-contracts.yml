@@ -1,0 +1,41 @@
+name: Validate core contracts
+
+on:
+  push:
+    branches:
+      - feature/core-contracts
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Dependencies
+        run: flutter pub get
+
+      - name: Verify story adapters
+        run: dart run tool/verificar_historias.dart
+
+      - name: Require all 12 stories active
+        shell: bash
+        run: |
+          cat lib/core/integracion/registro_historias.g.dart
+          COUNT=$(grep -c ": 'activa'" lib/core/integracion/registro_historias.g.dart)
+          echo "Active stories: $COUNT"
+          test "$COUNT" -eq 12
+
+      - name: Analyze integration
+        run: flutter analyze lib/main.dart lib/core lib/theme/integracion
+
+      - name: Build debug APK
+        run: flutter build apk --debug
