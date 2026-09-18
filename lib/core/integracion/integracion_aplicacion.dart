@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../contratos/constructor_aplicacion.dart';
 import '../contratos/modulo_historia.dart';
+import 'contenedor_dependencias.dart';
 import 'registro_historias.g.dart';
 
 /// Punto único de composición.
@@ -15,12 +16,14 @@ final class IntegracionAplicacion {
     required ConstructorAplicacion constructor,
   }) async {
     final modulos = construirModulosGenerados();
+    final contenedor = ContenedorDependencias();
 
     _validarIdsUnicos(modulos);
     _validarDependencias(modulos);
 
     for (final modulo in modulos) {
-      await modulo.inicializar();
+      modulo.registrarDependencias(contenedor);
+      await modulo.inicializar(contenedor);
     }
 
     return constructor.construir(modulos: List.unmodifiable(modulos));
