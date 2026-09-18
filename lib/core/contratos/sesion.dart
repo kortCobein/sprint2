@@ -1,3 +1,5 @@
+import 'dart:async';
+
 enum RolAplicacion { administrador, auditor, cliente }
 
 extension PermisosRolAplicacion on RolAplicacion {
@@ -34,4 +36,23 @@ abstract interface class AutenticacionAplicacion {
 
 abstract interface class CierreSesionAplicacion {
   Future<void> cerrarSesion();
+}
+
+/// Registro compartido para estados en memoria que deben limpiarse al salir.
+///
+/// US09 puede registrar el carrito y US02 ejecuta todos los limpiadores sin
+/// depender directamente de la implementación del carrito.
+final class RegistroLimpiezaSesion {
+  final List<FutureOr<void> Function()> _limpiadores =
+      <FutureOr<void> Function()>[];
+
+  void agregar(FutureOr<void> Function() limpiador) {
+    _limpiadores.add(limpiador);
+  }
+
+  Future<void> limpiarTodo() async {
+    for (final limpiador in _limpiadores) {
+      await limpiador();
+    }
+  }
 }
