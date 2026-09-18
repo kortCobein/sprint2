@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 import '../contratos/constructor_aplicacion.dart';
 import '../contratos/modulo_historia.dart';
+import '../contratos/sesion.dart';
 import 'contenedor_dependencias.dart';
 import 'registro_historias.g.dart';
 
@@ -16,7 +17,8 @@ final class IntegracionAplicacion {
     required ConstructorAplicacion constructor,
   }) async {
     final modulos = construirModulosGenerados();
-    final contenedor = ContenedorDependencias();
+    final contenedor = ContenedorDependencias()
+      ..registrar<RegistroLimpiezaSesion>(RegistroLimpiezaSesion());
 
     _validarIdsUnicos(modulos);
     _validarDependencias(modulos);
