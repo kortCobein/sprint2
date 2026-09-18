@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import '../integracion/contenedor_dependencias.dart';
+
 /// Punto de integración estable entre una historia y el núcleo de la app.
 ///
 /// Las historias existentes no necesitan modificarse para implementar este
@@ -14,8 +16,12 @@ abstract interface class ModuloHistoria {
   /// Rutas que aporta el módulo a la aplicación.
   Iterable<RutaHistoria> get rutas;
 
-  /// Inicialización opcional de controladores, repositorios o estado.
-  Future<void> inicializar();
+  /// Registra en el contenedor los contratos que este módulo expone.
+  void registrarDependencias(ContenedorDependencias contenedor);
+
+  /// Inicializa controladores, repositorios o estado usando contratos ya
+  /// registrados por sus dependencias.
+  Future<void> inicializar(ContenedorDependencias contenedor);
 }
 
 /// Ruta expuesta por una historia sin obligar a main.dart a conocer su widget.
