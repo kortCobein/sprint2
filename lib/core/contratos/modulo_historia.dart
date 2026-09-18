@@ -1,11 +1,9 @@
-import 'package:flutter/widgets.dart';
-
 import '../integracion/contenedor_dependencias.dart';
 
-/// Punto de integración estable entre una historia y el núcleo de la app.
+/// Contrato mínimo que representa una User Story dentro del núcleo.
 ///
-/// Las historias existentes no necesitan modificarse para implementar este
-/// contrato directamente. Un adaptador dentro de core puede envolverlas.
+/// El código congelado de features no necesita implementar este contrato.
+/// Cada historia se conecta mediante un adaptador ubicado en core.
 abstract interface class ModuloHistoria {
   /// Identificador estable: us01, us02, ..., us12.
   String get id;
@@ -13,26 +11,9 @@ abstract interface class ModuloHistoria {
   /// Historias que deben estar activas antes que este módulo.
   List<String> get dependencias;
 
-  /// Rutas que aporta el módulo a la aplicación.
-  Iterable<RutaHistoria> get rutas;
-
-  /// Registra en el contenedor los contratos que este módulo expone.
+  /// Registra los contratos que esta historia expone a otras capas.
   void registrarDependencias(ContenedorDependencias contenedor);
 
-  /// Inicializa controladores, repositorios o estado usando contratos ya
-  /// registrados por sus dependencias.
+  /// Inicializa la historia usando únicamente contratos ya disponibles.
   Future<void> inicializar(ContenedorDependencias contenedor);
-}
-
-/// Ruta expuesta por una historia sin obligar a main.dart a conocer su widget.
-final class RutaHistoria {
-  const RutaHistoria({
-    required this.nombre,
-    required this.construir,
-    this.requiereSesion = false,
-  });
-
-  final String nombre;
-  final WidgetBuilder construir;
-  final bool requiereSesion;
 }
