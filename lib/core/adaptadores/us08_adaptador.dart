@@ -3,6 +3,7 @@ import '../../features/e3_kurt/hist08_eliminar_producto/repositorio_eliminacion_
 import '../../features/e3_kurt/hist08_eliminar_producto/servicio_eliminacion_producto_http.dart';
 import '../contratos/modulo_historia.dart';
 import '../contratos/productos.dart';
+import '../contratos/sesion.dart';
 import '../integracion/contenedor_dependencias.dart';
 import 'mapeos.dart';
 
