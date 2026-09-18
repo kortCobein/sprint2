@@ -1,3 +1,5 @@
+import 'sesion.dart';
+
 final class ProductoAplicacion {
   const ProductoAplicacion({
     required this.id,
@@ -48,13 +50,22 @@ abstract interface class DetalleProductoAplicacion {
 }
 
 abstract interface class CrearProductoAplicacion {
-  Future<ProductoAplicacion> crear(ProductoAplicacion producto);
+  Future<ProductoAplicacion> crear({
+    required RolAplicacion rol,
+    required ProductoAplicacion producto,
+  });
 }
 
 abstract interface class EditarProductoAplicacion {
-  Future<ProductoAplicacion> editar(ProductoAplicacion producto);
+  Future<ProductoAplicacion> editar({
+    required RolAplicacion rol,
+    required ProductoAplicacion producto,
+  });
 }
 
 abstract interface class EliminarProductoAplicacion {
-  Future<void> eliminar(int id);
+  Future<void> eliminar({
+    required RolAplicacion rol,
+    required int id,
+  });
 }
