@@ -1,9 +1,11 @@
 import '../../features/e1_sebastian/hist01_login_perfiles/asignacion_perfiles/rol_usuario.dart';
 import '../../features/e1_sebastian/hist01_login_perfiles/login/sesion_usuario.dart';
 import '../../features/e2_leonel/hist03_catalogo_general/producto.dart';
+import '../../features/e4_ariel/hist09_agregar_carrito/estado_carrito/estado_carrito.dart';
 import '../../features/e5_julio/hist11_listar_usuarios/modelo_usuario.dart';
 import '../../features/e5_julio/hist12_historico_carritos/modelo_carrito_auditoria.dart';
 import '../contratos/auditoria.dart';
+import '../contratos/carrito.dart';
 import '../contratos/productos.dart';
 import '../contratos/sesion.dart';
 
@@ -48,6 +50,21 @@ Producto productoFeatureDesdeAplicacion(ProductoAplicacion producto) {
     imagen: producto.imagen,
     categoria: producto.categoria,
     descripcion: producto.descripcion,
+  );
+}
+
+CarritoAplicacion carritoAplicacionDesdeFeature(EstadoCarrito estado) {
+  return CarritoAplicacion(
+    usuario: estado.idUsuario ?? 0,
+    idRemoto: estado.idRemoto,
+    lineas: estado.lineas
+        .map(
+          (linea) => LineaCarritoAplicacion(
+            producto: productoAplicacionDesdeFeature(linea.producto),
+            cantidad: linea.cantidad,
+          ),
+        )
+        .toList(growable: false),
   );
 }
 
