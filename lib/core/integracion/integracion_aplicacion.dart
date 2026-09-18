@@ -26,7 +26,10 @@ final class IntegracionAplicacion {
       await modulo.inicializar(contenedor);
     }
 
-    return constructor.construir(modulos: List.unmodifiable(modulos));
+    return constructor.construir(
+      historiasActivas: Set.unmodifiable(modulos.map((modulo) => modulo.id)),
+      contenedor: contenedor,
+    );
   }
 
   static void _validarIdsUnicos(List<ModuloHistoria> modulos) {
