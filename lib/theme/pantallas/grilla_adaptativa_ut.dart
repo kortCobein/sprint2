@@ -25,7 +25,7 @@ class GrillaAdaptativaUT extends StatelessWidget {
       builder: (context, restricciones) {
         final anchoDisponible = restricciones.maxWidth;
         final columnas =
-            (anchoDisponible / anchoMinimoItem).floor().clamp(1, 4);
+            (anchoDisponible / anchoMinimoItem).floor().clamp(1, 4).toInt();
 
         return GridView.builder(
           shrinkWrap: true,

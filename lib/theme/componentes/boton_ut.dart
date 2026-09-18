@@ -66,11 +66,16 @@ class BotonUT extends StatelessWidget {
 
   Widget _contenido() {
     if (cargando) {
-      return const SizedBox.square(
+      final color = variante == VarianteBotonUT.primario ||
+              variante == VarianteBotonUT.peligro
+          ? Colors.white
+          : ColoresUT.verde;
+
+      return SizedBox.square(
         dimension: 20,
         child: CircularProgressIndicator(
           strokeWidth: 2.2,
-          color: Colors.white,
+          color: color,
         ),
       );
     }
