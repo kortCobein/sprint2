@@ -18,7 +18,10 @@ abstract interface class AlmacenSesion {
 /// Persistencia de la sesion usando almacenamiento cifrado del dispositivo.
 class AlmacenSesionSegura implements AlmacenSesion {
   AlmacenSesionSegura({FlutterSecureStorage? almacenamiento})
-      : _almacenamiento = almacenamiento ?? const FlutterSecureStorage();
+      : _almacenamiento = almacenamiento ??
+            const FlutterSecureStorage(
+              aOptions: AndroidOptions(encryptedSharedPreferences: true),
+            );
 
   /// Esta clave tambien es eliminada por la US02.
   static const String claveSesion = 'auth.session';
@@ -27,26 +30,31 @@ class AlmacenSesionSegura implements AlmacenSesion {
 
   /// Responsabilidad única: Guarda los datos recibidos en el almacenamiento correspondiente.
   @override
-  Future<void> guardar(SesionUsuario sesion) {
-    return _almacenamiento.write(
-      key: claveSesion,
-      value: jsonEncode(sesion.aJson()),
-    );
+  Future<void> guardar(SesionUsuario sesion) async {
+    try {
+      await _almacenamiento.write(
+        key: claveSesion,
+        value: jsonEncode(sesion.aJson()),
+      );
+    } catch (_) {
+      // Si el almacenamiento seguro del dispositivo no está disponible,
+      // la sesión sigue viva en memoria durante la ejecución.
+    }
   }
 
   /// Responsabilidad única: Recupera los datos almacenados sin modificar su contenido.
   @override
   Future<SesionUsuario?> leer() async {
-    final valor = await _almacenamiento.read(key: claveSesion);
-    if (valor == null || valor.isEmpty) return null;
-
     try {
+      final valor = await _almacenamiento.read(key: claveSesion);
+      if (valor == null || valor.isEmpty) return null;
+
       final decodificado = jsonDecode(valor);
       if (decodificado is! Map<String, dynamic>) {
         throw const FormatException('Formato de sesion invalido.');
       }
       return SesionUsuario.desdeJson(decodificado);
-    } on FormatException {
+    } catch (_) {
       // Si la sesion guardada esta corrupta, se elimina para no restaurarla.
       await limpiar();
       return null;
@@ -55,5 +63,9 @@ class AlmacenSesionSegura implements AlmacenSesion {
 
   /// Responsabilidad única: Limpia el estado o almacenamiento responsabilidad de este componente.
   @override
-  Future<void> limpiar() => _almacenamiento.delete(key: claveSesion);
+  Future<void> limpiar() async {
+    try {
+      await _almacenamiento.delete(key: claveSesion);
+    } catch (_) {}
+  }
 }

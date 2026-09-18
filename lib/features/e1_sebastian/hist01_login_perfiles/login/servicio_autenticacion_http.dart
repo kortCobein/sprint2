@@ -41,10 +41,10 @@ class VerificadorConexionDns implements VerificadorConexion {
       final direcciones = await InternetAddress.lookup(destino.host)
           .timeout(const Duration(seconds: 4));
       return direcciones.isNotEmpty;
-    } on TimeoutException {
-      return false;
-    } on SocketException {
-      return false;
+    } catch (_) {
+      // En dispositivos móviles con DNS privado o IPv6, lookup puede fallar
+      // pero la petición HTTP real sí funciona. Permitimos que continúe.
+      return true;
     }
   }
 }
@@ -90,7 +90,7 @@ class ServicioAutenticacionHttp implements ApiAutenticacion {
           )
           .timeout(_tiempoEspera);
 
-      if (respuesta.statusCode == 200) {
+      if (respuesta.statusCode == 200 || respuesta.statusCode == 201) {
         final datos = jsonDecode(respuesta.body);
         if (datos is! Map<String, dynamic>) {
           throw const ExcepcionAutenticacion(
@@ -154,7 +154,8 @@ class ServicioAutenticacionHttp implements ApiAutenticacion {
 
       for (final elemento in datos) {
         if (elemento is Map<String, dynamic> &&
-            elemento['username']?.toString() == usuario) {
+            elemento['username']?.toString().toLowerCase() ==
+                usuario.toLowerCase()) {
           return elemento;
         }
       }

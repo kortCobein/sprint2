@@ -1,0 +1,62 @@
+name: Build release APK
+
+concurrency:
+  group: release-apk-main
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/build-release-apk.yml"
+      - "lib/**"
+      - "android/**"
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - "tool/**"
+      - "test/**"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Dependencies
+        run: flutter pub get
+
+      - name: Verify story adapters
+        run: dart run tool/verificar_historias.dart
+
+      - name: Require all 12 stories active
+        shell: bash
+        run: |
+          COUNT=$(grep -c ": 'activa'" lib/core/integracion/registro_historias.g.dart)
+          echo "Active stories: $COUNT"
+          test "$COUNT" -eq 12
+
+      - name: Tests
+        run: flutter test
+
+      - name: Build release APK
+        run: flutter build apk --release
+
+      - name: Prepare final APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Sprint2_UT_release.apk
+
+      - name: Upload release APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sprint2_UT_release
+          path: build/app/outputs/flutter-apk/Sprint2_UT_release.apk
+          if-no-files-found: error
