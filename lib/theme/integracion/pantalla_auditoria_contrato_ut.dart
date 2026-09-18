@@ -119,38 +119,44 @@ class _UsuariosUT extends StatelessWidget {
         }
 
         return ContenedorResponsiveUT(
-          child: ListView.separated(
+          child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: DimensionesUT.espacio20,
             ),
-            itemCount: usuarios.length,
-            separatorBuilder: (_, __) =>
-                const SizedBox(height: DimensionesUT.espacio12),
-            itemBuilder: (context, indice) {
-              final usuario = usuarios[indice];
-              return Card(
-                child: ListTile(
-                  leading: CircleAvatar(
-                    child: Text(
-                      usuario.nombreCompleto.isEmpty
-                          ? usuario.usuario.characters.first.toUpperCase()
-                          : usuario.nombreCompleto.characters.first
-                              .toUpperCase(),
+            child: Column(
+              children: usuarios
+                  .map(
+                    (usuario) => Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: DimensionesUT.espacio12,
+                      ),
+                      child: Card(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: Text(
+                              _inicial(
+                                usuario.nombreCompleto.isEmpty
+                                    ? usuario.usuario
+                                    : usuario.nombreCompleto,
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            usuario.nombreCompleto.isEmpty
+                                ? usuario.usuario
+                                : usuario.nombreCompleto,
+                          ),
+                          subtitle: Text(
+                            '${usuario.correo}\n${usuario.telefono}',
+                          ),
+                          isThreeLine: true,
+                          trailing: Text('#${usuario.id}'),
+                        ),
+                      ),
                     ),
-                  ),
-                  title: Text(
-                    usuario.nombreCompleto.isEmpty
-                        ? usuario.usuario
-                        : usuario.nombreCompleto,
-                  ),
-                  subtitle: Text(
-                    '${usuario.correo}\n${usuario.telefono}',
-                  ),
-                  isThreeLine: true,
-                  trailing: Text('#${usuario.id}'),
-                ),
-              );
-            },
+                  )
+                  .toList(growable: false),
+            ),
           ),
         );
       },
@@ -191,48 +197,59 @@ class _CarritosUT extends StatelessWidget {
         }
 
         return ContenedorResponsiveUT(
-          child: ListView.separated(
+          child: Padding(
             padding: const EdgeInsets.symmetric(
               vertical: DimensionesUT.espacio20,
             ),
-            itemCount: carritos.length,
-            separatorBuilder: (_, __) =>
-                const SizedBox(height: DimensionesUT.espacio12),
-            itemBuilder: (context, indice) {
-              final carrito = carritos[indice];
-              return Card(
-                child: ExpansionTile(
-                  leading: const Icon(Icons.shopping_bag_outlined),
-                  title: Text(
-                    'Carrito #${carrito.id} · Usuario #${carrito.usuarioId}',
-                  ),
-                  subtitle: Text(
-                    carrito.fecha?.toLocal().toString() ?? 'Fecha no disponible',
-                  ),
-                  children: carrito.productos
-                      .map(
-                        (producto) => ListTile(
-                          dense: true,
-                          leading: const Icon(
-                            Icons.inventory_2_outlined,
-                            size: 20,
-                          ),
+            child: Column(
+              children: carritos
+                  .map(
+                    (carrito) => Padding(
+                      padding: const EdgeInsets.only(
+                        bottom: DimensionesUT.espacio12,
+                      ),
+                      child: Card(
+                        child: ExpansionTile(
+                          leading: const Icon(Icons.shopping_bag_outlined),
                           title: Text(
-                            producto.titulo ??
-                                'Producto #${producto.productoId}',
+                            'Carrito #${carrito.id} · Usuario #${carrito.usuarioId}',
                           ),
-                          trailing: Text('x${producto.cantidad}'),
+                          subtitle: Text(
+                            carrito.fecha?.toLocal().toString() ??
+                                'Fecha no disponible',
+                          ),
+                          children: carrito.productos
+                              .map(
+                                (producto) => ListTile(
+                                  dense: true,
+                                  leading: const Icon(
+                                    Icons.inventory_2_outlined,
+                                    size: 20,
+                                  ),
+                                  title: Text(
+                                    producto.titulo ??
+                                        'Producto #${producto.productoId}',
+                                  ),
+                                  trailing: Text('x${producto.cantidad}'),
+                                ),
+                              )
+                              .toList(growable: false),
                         ),
-                      )
-                      .toList(growable: false),
-                ),
-              );
-            },
+                      ),
+                    ),
+                  )
+                  .toList(growable: false),
+            ),
           ),
         );
       },
     );
   }
+}
+
+String _inicial(String texto) {
+  final limpio = texto.trim();
+  return limpio.isEmpty ? '?' : limpio.substring(0, 1).toUpperCase();
 }
 
 String _limpiarError(Object error) =>
