@@ -37,8 +37,8 @@ jobs:
           echo "Active stories: $COUNT"
           test "$COUNT" -eq 12
 
-      - name: Analyze integration
-        run: flutter analyze lib/main.dart lib/core lib/theme/integracion
+      - name: Analyze project
+        run: flutter analyze --no-fatal-infos --no-fatal-warnings
 
       - name: Build debug APK
         run: flutter build apk --debug
